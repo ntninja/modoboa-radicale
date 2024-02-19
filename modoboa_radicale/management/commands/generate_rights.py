@@ -25,7 +25,7 @@ class Command(BaseCommand):
             "--force", action="store_true", default=False,
             help="Force generation of rights file")
 
-    def _generate_acr(self, name, user, collection, perm="rw", comment=None):
+    def _generate_acr(self, name, user, collection, perm="Rrw", comment=None):
         """Write a new access control rule to the config file."""
         if comment is not None:
             self._cfgfile.write("\n# %s" % comment)
@@ -82,7 +82,7 @@ permissions = %s
 
     def _generate_file(self, target):
         """
-        A user must not declare a rule for his direct admin!
+        A user must not declare a rule for their direct admin!
         """
         self._cfgfile = open(target, "w")
         self._cfgfile.write("""# Rights management file for Radicale
@@ -101,9 +101,9 @@ permissions = %s
         #     comment="Access rule to domain shared calendars"
         # )
         self._generate_acr(
-            "principal", r".+", r"{user}", perm="RW",
+            "principal", r".+", r"|{user}", perm="RrW",
             comment="Allow reading and writing principal collection "
-            "(same as user name)"
+            "(same as user name) and the root collection for the web interface"
         )
         self._generate_acr(
             "calendars", r".+", r"{user}/[^/]+",
